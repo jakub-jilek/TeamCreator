@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 
+export interface Team {
+  player1: string;
+  player2: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,7 +12,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  teamsArray: Array<{player1: string, player2: string}> = [];
+  teamsArray: Array<Team> = [];
+  team: Team;
   chosenPlayers: Array<string> = [];
 
   players = [
@@ -26,7 +32,19 @@ export class AppComponent {
 
   createTeams() {
     this.findChosenPlayers();
-    console.log(this.chosenPlayers);
+    while(this.chosenPlayers.length > 1) {
+      this.team.player1 = this.player;
+      this.team.player2 = this.player;
+      this.teamsArray.push(this.team);
+    }
+    console.log(this.teamsArray);
+  }
+
+  get player() {
+    let index = Math.floor(Math.random() * this.chosenPlayers.length - 1) + 1;
+    let playerName = this.chosenPlayers[index];
+    this.chosenPlayers.splice(index, 1);
+    return playerName;
   }
 
   findChosenPlayers() {
