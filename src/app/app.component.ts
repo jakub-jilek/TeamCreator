@@ -85,9 +85,18 @@ export class AppComponent {
     }
   }
 
+  unselectAll() {
+    for (let player of this.players) {
+      player.checked = false;
+    }
+  }
+
   selectChampions() {
     for (let i = 0; i < 6; i++) {
       this.players[i].checked = true;
+    }
+    for (let i = 6; i < this.players.length; i++) {
+      this.players[i].checked = false;
     }
   }
 }
