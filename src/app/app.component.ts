@@ -12,9 +12,9 @@ export interface Team {
 })
 export class AppComponent {
 
-  teamsArray: Array<Team> = [];
-  team: Team;
+  teams: Array<Team> = [];
   chosenPlayers: Array<string> = [];
+  mixedChosenPlayers: Array<string> = [];
 
   players = [
     { id: 1, name: 'Jakub', checked: false },
@@ -32,28 +32,54 @@ export class AppComponent {
 
   createTeams() {
     this.findChosenPlayers();
-    while(this.chosenPlayers.length > 1) {
-      this.team.player1 = this.player;
-      this.team.player2 = this.player;
-      this.teamsArray.push(this.team);
-    }
-    console.log(this.teamsArray);
+    this.mixPlayers();
+    this.fillTeamsArray();
   }
 
-  get player() {
-    let index = Math.floor(Math.random() * this.chosenPlayers.length - 1) + 1;
-    let playerName = this.chosenPlayers[index];
-    this.chosenPlayers.splice(index, 1);
-    return playerName;
+  fillTeamsArray() {
+    this.teams = [];
+    let team: Team = {player1: '', player2: ''};
+    while (this.mixedChosenPlayers.length > 0) {
+      team.player1 = this.mixedChosenPlayers[0];
+      this.mixedChosenPlayers.splice(0, 1);
+      if (this.mixedChosenPlayers[0]) {
+        team.player2 = this.mixedChosenPlayers[0];
+        this.mixedChosenPlayers.splice(0, 1);
+      } else {
+        team.player2 = ' ';
+      }
+      this.teams.push({ player1: team.player1, player2: team.player2});
+    }
+  }
+
+  mixPlayers() {
+    const tempPlayersArray = Object.assign([], this.chosenPlayers);
+    this.mixedChosenPlayers = [];
+    while (tempPlayersArray.length > 0) {
+      const index = this.chooseIndex(tempPlayersArray.length);
+      this.mixedChosenPlayers.push(tempPlayersArray[index]);
+      tempPlayersArray.splice(index, 1);
+    }
+    console.log(this.mixedChosenPlayers);
+  }
+
+  // get player() {
+  //   const index = Math.floor(Math.random() * this.chosenPlayers.length - 1) + 1;
+  //   const playerName = this.chosenPlayers[index];
+  //   this.chosenPlayers.splice(index, 1);
+  //   return playerName;
+  // }
+
+  chooseIndex(max) {
+    return Math.floor(Math.random() * max);
   }
 
   findChosenPlayers() {
-    for(let i = 0; i < this.players.length; i++) {
-        if((this.players[i].checked) && !(this.chosenPlayers.indexOf(this.players[i].name) > -1)) {
-          this.chosenPlayers.push(this.players[i].name);
-        }
-        else if(!(this.players[i].checked) && (this.chosenPlayers.indexOf(this.players[i].name) > -1)) {
-           const index = this.chosenPlayers.indexOf(this.players[i].name);
+    for (const player of this.players) {
+      if ((player.checked) && !(this.chosenPlayers.indexOf(player.name) > -1)) {
+          this.chosenPlayers.push(player.name);
+        } else if (!(player.checked) && (this.chosenPlayers.indexOf(player.name) > -1)) {
+           const index = this.chosenPlayers.indexOf(player.name);
            this.chosenPlayers.splice(index, 1);
         }
       }
