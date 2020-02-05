@@ -1,22 +1,27 @@
-<mat-grid-list cols="2" rowHeight="2:1">
-  <mat-grid-tile>
-    <div class="row col-md-6">
+
+  <div class="flex-grid-thirds">
+    <div class="col">
       <section class="example-section" *ngFor="let player of players">
         <mat-checkbox
           class="example-margin"
           name="checkbox"
           value="{{player.id}}"
           [(ngModel)]="player.checked">
-            {{player.name}}
+          {{player.name}}
         </mat-checkbox>
       </section>
-      <button mat-raised-button color="primary" style="margin-top:10px;" (click)="createTeams()">Vytvoř týmy</button>
+      <div class="button-margin">
+        <button mat-raised-button color="primary" style="margin-right: 8px;" (click)="selectAll()">Vyber všechny</button>
+        <button mat-raised-button color="primary" style="margin-right: 8px;" (click)="selectChampions()">Vyber obvyklé</button>
+        <button mat-raised-button color="accent" (click)="createTeams()">Vytvoř týmy</button>
+      </div>
     </div>
-  </mat-grid-tile>
-  <div *ngFor="let team of teams; let i = index">
-    <h3>Tým {{ i }}</h3>
-    {{team.player1}} - {{team.player2}}
+    <div class="col">
+      <div *ngFor="let team of teams; let i = index">
+        <h3>Tým {{ i+1 }}</h3>
+        {{team.player1}} - {{team.player2}}
+      </div>
+    </div>
+    <div class="col">
+    </div>
   </div>
-  <mat-grid-tile>
-  </mat-grid-tile>
-</mat-grid-list>
